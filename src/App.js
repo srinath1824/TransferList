@@ -8,6 +8,15 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(0.5, 0),
   },
+  formControl: {
+    margin: theme.spacing(3),
+  },
 }));
 
 function not(a, b) {
@@ -31,11 +43,24 @@ function intersection(a, b) {
   return a.filter(value => b.indexOf(value) !== -1);
 }
 
+
 export default function TransferList() {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([0, 1, 2, 3]);
   const [right, setRight] = React.useState([4, 5, 6, 7]);
+  const [values, setValues] = React.useState('');
+  const [value, setValue] = React.useState('');
+  let data = ['ram','sam','tom','paul','john','jerry','mak','sid']
+
+  const handleRadioChange = event => {
+    setValue(event.target.value);
+  };
+
+  const handleChange = event => {
+    console.log(event.target.value)
+    setValues(event.target.value);
+  };
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
@@ -80,7 +105,7 @@ export default function TransferList() {
       <List dense component="div" role="list">
         {items.map(value => {
           const labelId = `transfer-list-item-${value}-label`;
-
+          
           return (
             <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
               <ListItemIcon>
@@ -91,7 +116,7 @@ export default function TransferList() {
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              <ListItemText id={labelId} primary={data[value]} />
             </ListItem>
           );
         })}
@@ -101,6 +126,7 @@ export default function TransferList() {
   );
 
   return (
+    <div>
     <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
       <Grid item>{customList(left)}</Grid>
       <Grid item>
@@ -149,5 +175,34 @@ export default function TransferList() {
       </Grid>
       <Grid item>{customList(right)}</Grid>
     </Grid>
+    <div style={{marginLeft: '50px'}}>
+    <InputLabel>Fruits</InputLabel>
+    <Select
+          value={values}
+          onChange={handleChange}
+        >
+          <MenuItem value={'Apple'}>Apple</MenuItem>
+          <MenuItem value={'Banana'}>Banana</MenuItem>
+          <MenuItem value={'Grapes'}>Grapes</MenuItem>
+        </Select>
+        <FormControl component="fieldset" className={classes.formControl}>
+        <RadioGroup aria-label="gender" name="gender2" value={value} onChange={handleRadioChange}>
+          <FormControlLabel
+            value="eat"
+            control={<Radio color="primary" />}
+            label="eat"
+            labelPlacement="start"
+          />
+          <FormControlLabel
+            value="drink"
+            control={<Radio color="primary" />}
+            label="drink"
+            labelPlacement="start"
+          />
+        </RadioGroup>
+      </FormControl>
+      <h1 style={{textAlign: 'center', display: 'inline-block', marginLeft:'100px'}}>{value + " " + values}</h1>
+        </div>
+    </div>
   );
 }
